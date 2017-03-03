@@ -7,6 +7,7 @@ package jdbctestcs2016b;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,11 +27,27 @@ public class App
         setupDataSource();
         
         printStudents();
-        deleteStudent(980);
+        addStudent("Jeppe", "dsfdsf@fdkkkd.com", 12);
         printStudents();
     }
     
-    private 
+    private static void addStudent(String name, String email, int classid)
+    {
+        try(Connection con = ds.getConnection())
+        {
+            String sqlCommand =
+            "INSERT INTO Student(name, email, classid) VALUES(?, ?, ?)";
+            PreparedStatement pstat = con.prepareStatement(sqlCommand);
+            pstat.setString(1, name);
+            pstat.setString(2, email);
+            pstat.setInt(3, classid);
+            pstat.executeUpdate();
+        }
+        catch (SQLException sqle)
+        {
+            System.err.println(sqle);
+        }
+    }
     
     private static boolean deleteStudent(int studentId)
     {
@@ -63,7 +80,7 @@ public class App
     {
         try(Connection con = ds.getConnection())
         {
-            String query = "SELECT * FROM [Student] WHERE classid=12";
+            String query = "SELECT * FROM [Student] WHERE classid=12 ORDER BY name DESC";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next())
