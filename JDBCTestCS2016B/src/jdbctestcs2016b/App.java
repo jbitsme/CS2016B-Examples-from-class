@@ -26,10 +26,16 @@ public class App
     {
         setupDataSource();
         
+        //printStudents();
+        //addStudent("Peter Strgeer", "stegger@steg.com", 12);
+        //printStudents();
+        updateStudent(1008, "Peter Strgeer", "stegger@steg.com", 12);
         printStudents();
-        addStudent("Jeppe", "dsfdsf@fdkkkd.com", 12);
-        printStudents();
+        
+        //addStudent("Jeppe", "dsfdsf@fdkkkd.com", 12);
+        //printStudents();
     }
+
     
     private static void addStudent(String name, String email, int classid)
     {
@@ -94,6 +100,31 @@ public class App
         {
             System.err.println(sqle);
         }
+    }
+
+    private static void updateStudent(
+            int id, String name, String email, int classid)
+    {
+        try(Connection con = ds.getConnection())
+        {
+            String sqlQuery =
+            "UPDATE Student SET name=?,email=?,classid=? WHERE id=?";
+            PreparedStatement pstmt =
+               con.prepareStatement(sqlQuery);
+            
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, classid);
+            pstmt.setInt(4, id);
+            
+            pstmt.execute();
+            
+        }
+        catch (SQLException sqle)
+        {
+            System.err.println(sqle);
+        }
+        
     }
     
 }
