@@ -29,12 +29,52 @@ public class CS2016BTransactionExample
     public static void main(String[] args)
     {
         setupDB();
+        System.out.println("Balance before: "+
+                getBalance(10000));
         
+        Float startBalance = getBalance(10000);
+        float newBalance = startBalance - 1000;
+        updateBalance(10000, newBalance);
         
-        // TODO code application logic here
+        System.out.println("Balance after: "+
+                getBalance(10000));
+        // Get balance *
+        // Subtract from balance
+        // update balance *
     }
     
-    public static Float getCurrentBalance(int accountNumber)
+    public static void deposit(int accountNumber, float amount)
+    {
+        
+    }
+    
+    public static void withdraw(int accountNumber, float amount)
+    {
+        
+    }
+    
+    public static void updateBalance(int accountNumber, 
+            float balance)
+    {
+        try (Connection con = ds.getConnection())
+        {
+            String sql = 
+                "UPDATE customer SET balance=? WHERE accountnumber=?";
+            
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+            
+            pstmt.setFloat(1, balance);
+            pstmt.setInt(2, accountNumber);
+            pstmt.execute();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(CS2016BTransactionExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static Float getBalance(int accountNumber)
     {
         try(Connection con = ds.getConnection())
         {
@@ -59,11 +99,11 @@ public class CS2016BTransactionExample
     
     public static void setupDB()
     {
-        ds.setInstanceName("SQLEXPRESS");
         ds.setDatabaseName("Bank");
         ds.setUser("java");
         ds.setPassword("java");
-        ds.setServerName("192.168.56.2");
+        ds.setServerName("192.168.56.100");
+        ds.setPortNumber(1433);
     }
     
 }
