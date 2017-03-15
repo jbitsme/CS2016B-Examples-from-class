@@ -29,35 +29,60 @@ public class CS2016BTransactionExample
     public static void main(String[] args)
     {
         setupDB();
-        System.out.println("Balance before: "+
-                getBalance(10000));
-        
-        Float startBalance = getBalance(10000);
-        float newBalance = startBalance - 1000;
-        updateBalance(10000, newBalance);
-        
-        System.out.println("Balance after: "+
-                getBalance(10000));
-        // Get balance *
-        // Subtract from balance
-        // update balance *
+        int customerId = 10000;
+        try(Connection con = ds.getConnection())
+        {
+            con.setAutoCommit(false); // Enable transactions
+            con.setTransactionIsolation(
+                    Connection.TRANSACTION_SERIALIZABLE);
+            
+            System.out.println("Current balance: " +
+                    getBalance(customerId,con));
+
+            deposit(customerId, 1345.98f,con);
+
+            System.out.println("Current balance: " +
+                    getBalance(customerId,con));
+
+            withdraw(customerId, 846.83f,con);
+
+            System.out.println("Current balance: " +
+                    getBalance(customerId,con));
+            try
+            {
+                con.commit();
+            }
+            catch (SQLException sqle)
+            {
+                con.rollback();
+            }
+            
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(CS2016BTransactionExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public static void deposit(int accountNumber, float amount)
+    public static void deposit(int accountNumber, float amount,
+            Connection con) throws SQLException
     {
-        
+        Float currentAmount = getBalance(accountNumber, con);
+        Float newAmount= currentAmount + amount;
+        updateBalance(accountNumber, newAmount, con);
     }
     
-    public static void withdraw(int accountNumber, float amount)
+    public static void withdraw(int accountNumber, float amount,
+            Connection con) throws SQLException
     {
-        
+        Float currentAmount = getBalance(accountNumber, con);
+        Float newAmount= currentAmount - amount;
+        updateBalance(accountNumber, newAmount, con);
     }
     
     public static void updateBalance(int accountNumber, 
-            float balance)
+            float balance, Connection con) throws SQLException
     {
-        try (Connection con = ds.getConnection())
-        {
             String sql = 
                 "UPDATE customer SET balance=? WHERE accountnumber=?";
             
@@ -67,17 +92,11 @@ public class CS2016BTransactionExample
             pstmt.setFloat(1, balance);
             pstmt.setInt(2, accountNumber);
             pstmt.execute();
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(CS2016BTransactionExample.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
     
-    public static Float getBalance(int accountNumber)
+    public static Float getBalance(int accountNumber, Connection con) throws SQLException
     {
-        try(Connection con = ds.getConnection())
-        {
             String sql = 
                 "SELECT balance FROM Customer WHERE accountnumber=?";
             PreparedStatement pstmt =
@@ -88,12 +107,6 @@ public class CS2016BTransactionExample
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             return rs.getFloat("balance");
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(CS2016BTransactionExample.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
         
     }
     
