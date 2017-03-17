@@ -6,10 +6,12 @@
 package cs2016btransactionexample;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +31,28 @@ public class CS2016BTransactionExample
     public static void main(String[] args)
     {
         setupDB();
-        int customerId = 10000;
+        Random r = new Random();
+        while(true)
+        {
+            doTransaction(10000, r.nextFloat()*5000+100);
+        }
+        
+    }
+    
+    public static void wait(int ms)
+    {
+        try
+        {
+            Thread.sleep(ms);
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(CS2016BTransactionExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void doTransaction(int customerId, float amount)
+    {
         try(Connection con = ds.getConnection())
         {
             con.setAutoCommit(false); // Enable transactions
@@ -38,19 +61,24 @@ public class CS2016BTransactionExample
             
             System.out.println("Current balance: " +
                     getBalance(customerId,con));
-
-            deposit(customerId, 1345.98f,con);
-
-            System.out.println("Current balance: " +
-                    getBalance(customerId,con));
-
-            withdraw(customerId, 846.83f,con);
+            
+            System.out.println("Depositing " + amount);
+            deposit(customerId, amount,con);
 
             System.out.println("Current balance: " +
                     getBalance(customerId,con));
+
+            //withdraw(customerId, 846.83f,con);
+
+            //System.out.println("Current balance: " +
+            //        getBalance(customerId,con));
             try
             {
                 con.commit();
+            }
+            catch (SQLServerException sqlse)
+            {
+                con.rollback();
             }
             catch (SQLException sqle)
             {
@@ -69,6 +97,7 @@ public class CS2016BTransactionExample
     {
         Float currentAmount = getBalance(accountNumber, con);
         Float newAmount= currentAmount + amount;
+        wait(2000);
         updateBalance(accountNumber, newAmount, con);
     }
     
@@ -77,6 +106,7 @@ public class CS2016BTransactionExample
     {
         Float currentAmount = getBalance(accountNumber, con);
         Float newAmount= currentAmount - amount;
+        wait(2000);
         updateBalance(accountNumber, newAmount, con);
     }
     
@@ -92,7 +122,6 @@ public class CS2016BTransactionExample
             pstmt.setFloat(1, balance);
             pstmt.setInt(2, accountNumber);
             pstmt.execute();
-        
     }
     
     public static Float getBalance(int accountNumber, Connection con) throws SQLException
@@ -107,7 +136,6 @@ public class CS2016BTransactionExample
             ResultSet rs = pstmt.executeQuery();
             rs.next();
             return rs.getFloat("balance");
-        
     }
     
     public static void setupDB()
