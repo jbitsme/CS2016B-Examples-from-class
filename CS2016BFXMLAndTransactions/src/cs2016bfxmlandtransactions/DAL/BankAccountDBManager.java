@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +64,35 @@ public class BankAccountDBManager
             account.setBalance(rs.getFloat("balance"));
             
             return account;
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(BankAccountDBManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    public List<BankAccount> getAllAccount()
+    {
+        List<BankAccount> accounts = new ArrayList();
+        
+        String sql =
+                "SELECT * FROM Customer";
+        try(Connection con = cm.getConnection())
+        {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next())
+            {
+                BankAccount account = 
+                        new BankAccount(rs.getInt("accountnumber"));
+                account.setBalance(rs.getFloat("balance"));
+                
+                accounts.add(account);
+            }
+            
+            return accounts;
         }
         catch (SQLException ex)
         {
