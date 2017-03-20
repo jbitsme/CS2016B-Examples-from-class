@@ -7,7 +7,7 @@ package cs2016bfxmlandtransactions.GUI.Model;
 
 import cs2016bfxmlandtransactions.BE.BankAccount;
 import cs2016bfxmlandtransactions.BLL.BankAccountManager;
-import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -20,7 +20,48 @@ public class BankAccountsModel
     private final ObservableList<BankAccount> accounts = 
             FXCollections.observableArrayList();
     
+    private BankAccount fromAccount;
+    private BankAccount toAccount;
+    
+    private final SimpleStringProperty fromAccountString = 
+            new SimpleStringProperty("");
+    
+    private final SimpleStringProperty toAccountString = 
+            new SimpleStringProperty("");
+    
     BankAccountManager bManager = new BankAccountManager();
+    
+    public SimpleStringProperty getToAccountProperty()
+    {
+        return toAccountString;
+    }
+    public SimpleStringProperty getFromAccountProperty()
+    {
+        return fromAccountString;
+    }
+    public BankAccount getFromAccount()
+    {
+        return fromAccount;
+    }
+    
+    public void setFromAccount(BankAccount account)
+    {
+        fromAccount = account;
+        fromAccountString.set(fromAccount.getAccountNumber() +
+                " (" + fromAccount.getBalance() + ")");
+    }
+
+    public BankAccount getToAccount()
+    {
+        return toAccount;
+    }
+    
+    public void setToAccount(BankAccount account)
+    {
+        toAccount=account;
+        toAccountString.set(toAccount.getAccountNumber() +
+                " (" + toAccount.getBalance() + ")");
+    }
     
     public void addAccount(BankAccount account)
     {
@@ -57,8 +98,7 @@ public class BankAccountsModel
         bManager.withdraw(account, amount);
     }
     
-    public void transfer(BankAccount fromAccount, 
-            BankAccount toAccount, Float amount)
+    public void transfer(Float amount)
     {
         bManager.transfer(fromAccount, toAccount, amount);
     }
