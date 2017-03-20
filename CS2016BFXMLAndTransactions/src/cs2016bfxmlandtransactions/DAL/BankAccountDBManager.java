@@ -45,6 +45,38 @@ public class BankAccountDBManager
         }
     }
     
+    public void addAccount(BankAccount account)
+    {
+        String sql = "INSERT INTO Customer(accountnumber, balance) VALUES(?, ?)";
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+            pstmt.setInt(1, account.getAccountNumber());
+            pstmt.setFloat(2, account.getBalance());
+            pstmt.execute();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(BankAccountDBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void removeAccount(BankAccount account)
+    {
+        String sql = "DELETE FROM Customer WHERE accountnumber=?";
+        try (Connection con = cm.getConnection())
+        {
+            PreparedStatement pstmt =
+                    con.prepareStatement(sql);
+            pstmt.setInt(1, account.getAccountNumber());
+            pstmt.execute();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(BankAccountDBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public BankAccount getBankAccount(int accountNumber)
     {
         BankAccount account = null;

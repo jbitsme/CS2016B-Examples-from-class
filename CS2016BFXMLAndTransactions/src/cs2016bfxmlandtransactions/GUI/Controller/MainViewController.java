@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs2016bfxmlandtransactions;
+package cs2016bfxmlandtransactions.GUI.Controller;
 
 import cs2016bfxmlandtransactions.BE.BankAccount;
 import cs2016bfxmlandtransactions.BLL.BankAccountManager;
+import cs2016bfxmlandtransactions.GUI.Model.BankAccountsModel;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,7 +29,7 @@ public class MainViewController implements Initializable
 {
     
     
-    BankAccountManager bManager = new BankAccountManager();
+    private BankAccountsModel aModel = new BankAccountsModel();
     @FXML
     private Button button;
     @FXML
@@ -55,11 +56,7 @@ public class MainViewController implements Initializable
                 cellData->cellData.getValue(
                     ).balanceProperty().asObject());
         
-        List<BankAccount> accs = bManager.getAllAccounts();
-        ObservableList<BankAccount> oAccounts =
-                FXCollections.observableArrayList(accs);
-        tableViewAccounts.setItems(oAccounts);
-// TODO
+        tableViewAccounts.setItems(aModel.getAllAccounts());
     }    
     
 }

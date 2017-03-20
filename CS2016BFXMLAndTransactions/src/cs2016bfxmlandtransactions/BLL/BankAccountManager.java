@@ -33,6 +33,16 @@ public class BankAccountManager
         return dbManager.getAllAccount();
     }
     
+    public void addAccount(BankAccount account)
+    {
+        dbManager.addAccount(account);
+    }
+    
+    public void removeAccount(BankAccount account)
+    {
+        dbManager.removeAccount(account);
+    }
+    
     public void deposit(BankAccount account, Float amount)
     {
         addToBalance(account, amount);

@@ -44,6 +44,11 @@ public class BankAccount
     {
         return accountNumber.get();
     }
+    
+    public void setAccountNumber(int accountNumber)
+    {
+        this.accountNumber.set(accountNumber);
+    }
 
     public IntegerProperty accountNumberProperty()
     {
