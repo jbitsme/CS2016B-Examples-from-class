@@ -5,12 +5,20 @@
  */
 package cs2016bfxmlandtransactions;
 
+import cs2016bfxmlandtransactions.BE.BankAccount;
+import cs2016bfxmlandtransactions.BLL.BankAccountManager;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 /**
  *
@@ -19,20 +27,39 @@ import javafx.scene.control.Label;
 public class MainViewController implements Initializable
 {
     
+    
+    BankAccountManager bManager = new BankAccountManager();
     @FXML
-    private Label label;
+    private Button button;
+    @FXML
+    private TableColumn<BankAccount, Integer> columnAccountNumber;
+    @FXML
+    private TableColumn<BankAccount, Float> columnBalance;
+    @FXML
+    private TableView<BankAccount> tableViewAccounts;
     
     @FXML
     private void handleButtonAction(ActionEvent event)
     {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        columnAccountNumber.setCellValueFactory(
+                cellData->cellData.getValue(
+                    ).accountNumberProperty().asObject());
+        
+        columnBalance.setCellValueFactory(
+                cellData->cellData.getValue(
+                    ).balanceProperty().asObject());
+        
+        List<BankAccount> accs = bManager.getAllAccounts();
+        ObservableList<BankAccount> oAccounts =
+                FXCollections.observableArrayList(accs);
+        tableViewAccounts.setItems(oAccounts);
+// TODO
     }    
     
 }
