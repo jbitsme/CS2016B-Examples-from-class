@@ -59,7 +59,7 @@ public class MainViewController implements Initializable
                     ).balanceProperty().asObject());
         
         lblFrom.textProperty().bind(
-                aModel.getFromAccountProperty());
+                aModel.getFromAccountString());
         
         lblTo.textProperty().bind(
                 aModel.getToAccountProperty());

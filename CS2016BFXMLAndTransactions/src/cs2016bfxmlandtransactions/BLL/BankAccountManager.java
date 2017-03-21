@@ -6,7 +6,7 @@
 package cs2016bfxmlandtransactions.BLL;
 
 import cs2016bfxmlandtransactions.BE.BankAccount;
-import cs2016bfxmlandtransactions.DAL.BankAccountDBManager;
+import cs2016bfxmlandtransactions.DAL.DALFacade;
 import java.util.List;
 
 /**
@@ -15,48 +15,36 @@ import java.util.List;
  */
 public class BankAccountManager
 {
-    private BankAccountDBManager dbManager = 
-            new BankAccountDBManager();
-    
-    private void addToBalance(BankAccount account, Float amount)
-    {
-        float initialAmount = 
-                dbManager.getBankAccount(
-                        account.getAccountNumber()).getBalance();
-        float newBalance = initialAmount + amount;
-        account.setBalance(newBalance);
-        dbManager.updateBankAccount(account);
-    }
+    private DALFacade dalFacade = new DALFacade();
     
     public List<BankAccount> getAllAccounts()
     {
-        return dbManager.getAllAccount();
+        return dalFacade.getAllAccounts();
     }
     
     public void addAccount(BankAccount account)
     {
-        dbManager.addAccount(account);
+        dalFacade.addAccount(account);
     }
     
     public void removeAccount(BankAccount account)
     {
-        dbManager.removeAccount(account);
+        dalFacade.removeAccount(account);
     }
     
     public void deposit(BankAccount account, Float amount)
     {
-        addToBalance(account, amount);
+        dalFacade.deposit(account, amount);
     }
     
     public void withdraw(BankAccount account, Float amount)
     {
-        addToBalance(account, (-1*amount));
+        dalFacade.withdraw(account, (-1*amount));
     }
     
     public void transfer(BankAccount fromAccount, 
             BankAccount toAccount, Float amount)
     {
-        withdraw(fromAccount, amount);
-        deposit(toAccount, amount);
+        dalFacade.transfer(fromAccount, toAccount, amount);
     }
 }
