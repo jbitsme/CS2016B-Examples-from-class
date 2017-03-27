@@ -39,7 +39,7 @@ public class BankAccountManager
     
     public void withdraw(BankAccount account, Float amount)
     {
-        dalFacade.withdraw(account, (-1*amount));
+        dalFacade.withdraw(account, (amount));
     }
     
     public void transfer(BankAccount fromAccount, 
