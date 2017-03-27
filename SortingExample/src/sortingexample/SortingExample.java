@@ -5,6 +5,7 @@
  */
 package sortingexample;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -43,9 +44,10 @@ public class SortingExample
     
     public static int[] bubbleSort(int[] input)
     {
+        // Needs implementation
+        int[] newArray = input.clone();
         
-        
-        return input;
+        return newArray;
     }
     
 }
