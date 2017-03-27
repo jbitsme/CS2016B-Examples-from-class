@@ -47,7 +47,23 @@ public class SortingExample
         // Needs implementation
         int[] newArray = input.clone();
         
-        return newArray;
+        return input;
+    }
+    
+    public static int[] selectionSort(int[] input)
+    {
+        // Needs implementation
+        int[] newArray = input.clone();
+        
+        return input;
+    }
+    
+    public static int[] insertionSort(int[] input)
+    {
+        // Needs implementation
+        int[] newArray = input.clone();
+        
+        return input;
     }
     
 }

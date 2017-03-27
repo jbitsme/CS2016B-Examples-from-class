@@ -6,12 +6,7 @@
 package sortingexample;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,47 +21,64 @@ public class SortingExampleTest
     {
     }
     
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-    
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-    
-    @Before
-    public void setUp()
-    {
-    }
-    
-    @After
-    public void tearDown()
-    {
-    }
-
-    
-
-
     /**
      * Test of bubbleSort method, of class SortingExample.
      */
     @Test
     public void testBubbleSort()
     {
-        
         System.out.println("bubbleSort");
+        testSort(SortSelector.BUBBLE);
+    }
+    /**
+     * Test of selectionSort method, of class SortingExample.
+     */
+    @Test
+    public void testSelectionSort()
+    {
+        System.out.println("selectionSort");
+        testSort(SortSelector.SELECTION);
+    }
+
+    /**
+     * Test of insertionSort method, of class SortingExample.
+     */
+    @Test
+    public void testInsertionSort()
+    {
+        System.out.println("insertionSort");
+        testSort(SortSelector.INSERTION);
+    }
+    
+    private void testSort(SortSelector selected)
+    {
         int[] input = new int[100];
         Random r = new Random(1337);
         for (int i = 0; i < input.length; i++)
         {
             input[i]= r.nextInt(20);
         }
+        int[] result = null;
+        switch(selected)
+        {
+            case BUBBLE:
+                result = SortingExample.bubbleSort(input);
+                break;
+            case SELECTION:
+                result = SortingExample.selectionSort(input);
+                break;
+            case INSERTION:
+                result = SortingExample.insertionSort(input);
+                break;
+        }
         int[] expResult = input.clone();
         Arrays.sort(expResult);
-        int[] result = SortingExample.bubbleSort(input);
         assertArrayEquals(expResult, result);
+    }
+    
+    private enum SortSelector
+    {
+        BUBBLE, SELECTION, INSERTION
     }
     
 }
