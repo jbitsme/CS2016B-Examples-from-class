@@ -5,6 +5,7 @@
  */
 package hashingexample;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,25 +22,43 @@ public class HashingExample
      */
     public static void main(String[] args)
     {
-        HashMap hm = new HashMap();
+        
+        HashMap hm = new HashMap(25_000_000);
         HashSet hs = new HashSet();
         ConcurrentHashMap chm = new ConcurrentHashMap();
         
-        for (int i = 0; i < 25000; i++)
+        hm.put("MyKeyNumber: " + 20_250_001, "The droid you have been looking for ;)");
+        for (int i = 0; i < 20_250_000; i++)
+            hm.put("MyKeyNumber: " + i, "Not the droid you are looking for");
+        
+        ArrayList<String> al = new ArrayList(hs);
+        for (int i = 0; i < 20_250_001; i++)
+            al.add("Not the droid you are looking for");
+        al.add("The droid you have been looking for ;)");
+        
+        
+        System.out.println("Fetching from hashmap:");
+        long start = System.currentTimeMillis();
+        System.out.println("Trying to find droid: " + hm.get("MyKeyNumber: " + 2_250_001));
+        System.out.println("Time elapsed: " + (System.currentTimeMillis()-start)/1000f + " sek");
+        
+        
+        System.out.println("Fetching from ArrayList:");
+        long starta = System.currentTimeMillis();
+        System.out.print("Trying to find droid: ");
+        long lookups=0;
+
+        for (String str : al)
         {
-            hm.put(i, "Not the droid you are looking for");
+            lookups++;
+            if(str.equals("The droid you have been looking for ;)"))
+            {
+                System.out.println(str);
+                break;
+            }
         }
+        System.out.println("Lookups: " + lookups + " " + (System.currentTimeMillis()-starta)/1000f + " sek");
         
-        
-        hm.put(25000, "The droid you have been looking for ;)");
-        for (int i = 25001; i < 1_000_000; i++)
-        {
-            hm.put(i, "Not the droid you are looking for");
-        }
-        
-        System.out.println("Trying to find droid: " + hm.get(25000));
-        
-        // TODO code application logic here
     }
     
 }
